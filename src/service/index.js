@@ -2,6 +2,7 @@ import axios from "axios";
 import camelCase from "lodash/camelCase";
 import store from "@/store";
 
+// API 設定
 const apiWorker = axios.create({
   baseURL: "http://localhost:3000",
   timeout: 30000,
@@ -12,6 +13,7 @@ const apiWorker = axios.create({
   },
 });
 /* Request Interceptor */
+// API 送出需求設定, 非登入或註冊時 headers 才要帶 token
 apiWorker.interceptors.request.use((config) => {
   if (!/(\/login)$/.test(config.url) || !/(\/register)$/.test(config.url)) {
     config.headers.Authorization = store.state.token || "FALSE_TOKEN";

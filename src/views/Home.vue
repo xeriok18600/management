@@ -69,9 +69,11 @@ export default {
       this.$store.commit("setComments", data);
     },
     mapData() {
+      // 用 map 直接把 posts 加入 commentsNum 這參數
       this.posts = this.posts.map((ele) => ({
         ...ele,
         commentsNum:
+          // 找出 comments postid 等於 post id 的陣列長度, 都沒有的話就為 0
           this.comments.filter((v) => v.postId === ele.id).length || 0,
       }));
     },

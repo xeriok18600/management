@@ -1,3 +1,3 @@
 export default {
-  __helloWorld: "Hello, World!",
+  helloWorld: "Hello, World!",
 };

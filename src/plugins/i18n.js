@@ -1,25 +1,29 @@
 import Vue from "vue";
 import VueI18n from "vue-i18n";
 
-// i18n
-import en from "../i18n/en/lang"; // 存放英文翻譯
-import tw from "../i18n/tw/lang"; // 存放繁體翻譯
+// i18n 翻譯文件
+import en from "@/i18n/en/lang"; // 存放英文翻譯
+import tw from "@/i18n/tw/lang"; // 存放繁體翻譯
+import jp from "@/i18n/jp/lang"; // 存放繁體翻譯
 
-// init
+// 使用 vue-i18n
 Vue.use(VueI18n);
 
-// translated locale messages
+// 放入翻譯的json
 const messages = {
-  tw,
   en,
+  tw,
+  jp,
 };
 
-const lang = localStorage.getItem("language") || "tw";
+// 抓取儲存在 localStorage 的 language, 沒有 language 為 tw
+const locale = localStorage.getItem("language") || "tw";
 
 // Create VueI18n instance with options
 const i18n = new VueI18n({
-  lang,
-  messages, // set locale messages
+  locale,
+  fallbackLocale: "tw", // 載入失敗時預設顯示中文
+  messages,
 });
 
 export default i18n;

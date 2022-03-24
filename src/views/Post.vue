@@ -52,6 +52,7 @@ export default {
       );
     },
     newComments() {
+      // 重新組合 comments, 多加一個 author
       return this.comments.map((ele) => ({
         ...ele,
         author: this.author[0]?.name,
