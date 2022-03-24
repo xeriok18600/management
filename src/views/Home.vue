@@ -1,18 +1,84 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <v-app-bar color="primary" dense dark elevation="0">
+      <v-spacer></v-spacer>
+      <v-btn text @click="logout"> 登出</v-btn>
+    </v-app-bar>
+    <v-container>
+      <v-list three-line>
+        <template v-for="item in posts">
+          <v-list-item :key="item.title">
+            <v-list-item-content>
+              <v-list-item-title class="title">{{
+                item.title
+              }}</v-list-item-title>
+              <v-list-item-subtitle>{{ item.body }}</v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-icon>
+              <v-badge
+                color="primary"
+                overlap
+                :value="item.commentsNum"
+                :content="item.commentsNum"
+              >
+                <v-icon
+                  large
+                  @click="
+                    $router.push({
+                      name: 'Post',
+                      params: { postId: item.id, post: item },
+                    })
+                  "
+                  >fa-solid fa-comments</v-icon
+                >
+              </v-badge>
+            </v-list-item-icon>
+          </v-list-item>
+          <v-divider :key="item.id"></v-divider>
+        </template>
+      </v-list>
+    </v-container>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
   name: "Home",
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      posts: [],
+    };
+  },
+  async created() {
+    await this.getPosts();
+    await this.getComments();
+    await this.mapData();
+  },
+  computed: {
+    comments() {
+      return this.$store.state.comments;
+    },
+  },
+  methods: {
+    async getPosts() {
+      const data = await this.axios.posts.getPosts();
+      this.posts = [...data];
+    },
+    async getComments() {
+      const data = await this.axios.posts.getComments("");
+      this.$store.commit("setComments", data);
+    },
+    mapData() {
+      this.posts = this.posts.map((ele) => ({
+        ...ele,
+        commentsNum:
+          this.comments.filter((v) => v.postId === ele.id).length || 0,
+      }));
+    },
+    logout() {
+      this.$store.commit("logout");
+      this.$router.push({ name: "PreLogin" });
+    },
   },
 };
 </script>
